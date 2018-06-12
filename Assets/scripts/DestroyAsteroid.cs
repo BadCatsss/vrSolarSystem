@@ -13,7 +13,7 @@ public class DestroyAsteroid : MonoBehaviour {
 	void Update () {
 		
 	}
-    private void OnCollisionEnter(Collision col)
+    private void OnCollisionEnter(Collision col)//уничтожаем объекты
     {
         if (col.gameObject.name == "Asteroid 1"|| col.gameObject.name == "Asteroid 2"|| col.gameObject.name == "Asteroid 3")
         {

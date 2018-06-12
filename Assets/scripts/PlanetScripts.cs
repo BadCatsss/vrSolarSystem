@@ -14,6 +14,6 @@ public class PlanetScripts : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        PlanetTransform.Rotate(new Vector3(transform.position.x,transform.position.y+1,transform.position.z)*Time.deltaTime*0.1f);
+        PlanetTransform.Rotate(new Vector3(transform.position.x,transform.position.y+1,transform.position.z)*Time.deltaTime*0.1f);// поворот вокруг оси
 	}
 }

@@ -22,7 +22,7 @@ public class AsteroidsScripts : MonoBehaviour, IEnumerable
 
     
 
-    IEnumerator IEnumerable.GetEnumerator()
+    IEnumerator IEnumerable.GetEnumerator()// с интервалом в 30 с
     {
         yield return new WaitForSeconds(30);
     }

@@ -5,70 +5,69 @@ using UnityEngine;
 public class vr : MonoBehaviour {
    
     void Start () {
-        state1 = true;
-        Input.gyro.enabled = true;
+        Horizontal_orint = true;// изначальное предпологаемое сосостояние телефона
+        Input.gyro.enabled = true;// включаем гироскоп
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
         transform.rotation = Input.gyro.attitude *GetRotFix();
-        if (state1 == true)// каждый раз когда меняется состояние - выключаем другое и сбрасываем счетчик поворотов
+        // код ниже овечает за плавный поворот - без эффекта ориентации устройства
+        if (Horizontal_orint == true)// каждый раз когда меняется состояние - выключаем другое и сбрасываем счетчик поворотов
         {
-            state2 = false;
-            countLandscape = 1;
+            Vertical_orint = false;
+            countLandscape = 1;//сбрасывем счетчик когда изменилось состояние
         }
-        else if (state2 == true)
+        else if (Vertical_orint == true)
         {
-            state1 = false;
-            countPortrait = 1;
+            Horizontal_orint = false;
+            countPortrait = 1;//сбрасывем счетчик когда изменилось состояние
         }
 
 
     }
-    bool state1;//горизонтально
-    bool state2;//вертикально
+
+    bool Horizontal_orint;//горизонтально
+    bool Vertical_orint;//вертикально
     int countLandscape;
     int countPortrait;
+
     Quaternion GetRotFix()
     {
         // отвечет за вращение поворот и выравнивание камеры
-        if (Screen.orientation == ScreenOrientation.Portrait|| Screen.orientation==ScreenOrientation.PortraitUpsideDown && state2==false)//емли телефон не горизонтален
+        if (Screen.orientation == ScreenOrientation.Portrait|| Screen.orientation==ScreenOrientation.PortraitUpsideDown && Vertical_orint == false)//емли телефон не горизонтален
         {
-            state2 = true;//телефон повернут вертикально
-          
+            Vertical_orint = true;//телефон повернут вертикально(выше сбрасывется счетчик countPortrait до 1 )
+
             if (countPortrait==1)
             {
                 return Quaternion.Euler(0, 0, 0);
             }
-            countPortrait++;
+            countPortrait++;// меняем значение счетчика, что бы указать что сейчас телефон и так в вертикальном положении положении и блок if выше - большене выполнялся
         }
-
-        if (Screen.orientation == ScreenOrientation.LandscapeLeft || Screen.orientation == ScreenOrientation.LandscapeRight && state1 == true)//если ориеантация устройства изменилась и до этого он был повернут вертикально
+        // ниже идет проверка - если ориеантация устройства изменилась и до этого он был повернут вертикально
+        if (Screen.orientation == ScreenOrientation.LandscapeLeft || Screen.orientation == ScreenOrientation.LandscapeRight && Horizontal_orint == true) //Horizontal_orint == true изменилась на true значит телефон перевернули из вертикального положения (из состояния  Vertical_orint - которое теперь false)
         {
 
-            state1 = true;//телефон повернут горизонтально
+            Horizontal_orint = true;//телефон повернут горизонтально(выше сбрасывается счетчик  countLandscape до 1)
             if (countLandscape == 1)
             {
 
-                return Quaternion.Euler(Input.gyro.attitude.x, Input.gyro.attitude.y, 90);
+                return Quaternion.Euler(Input.gyro.attitude.x, Input.gyro.attitude.y, 90);//Horizontal_orint == true изменилась на true значит телефон перевернули из вертикального положения - значит нужно повернуть камеру на 90
 
-               
+
             }
-            countLandscape++;
+            countLandscape++;// меняем значение счетчика, что бы указать что сейчас телефон и так в горизонтальном положении и блок if выше - большене выполнялся
         }
-        //if (Screen.orientation == ScreenOrientation.LandscapeRight || Screen.orientation == ScreenOrientation.Landscape)
-        //    return Quaternion.Euler(180, 0, 0);
+       
         
         return Quaternion.identity;
 
 
         
 
-        //if (Input.acceleration.y==2|| Input.acceleration.y == -2)
-        //{
-        //    return Quaternion.Euler(0,0,180);
-        //}
+       
     }
 }
 
